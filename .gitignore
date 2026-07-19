@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+mobile/node_modules/
+backend/node_modules/
+
+# Environment variables
+.env
+mobile/.env
+backend/.env
+
+# Build outputs
+dist/
+build/
+mobile/dist/
+backend/dist/
+
+# Expo
+mobile/.expo/
+mobile/expo-env.d.ts

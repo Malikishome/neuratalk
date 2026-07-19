@@ -1,0 +1,71 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id  String   @id @default(uuid())
+  email   String  @unique
+  username  String
+  password  String
+  tier  Tier  @default(STARTER)
+  sessionRemaining  Int   @default(10)
+  createdAt DateTime @default(now())
+  lastActiveAt DateTime @updatedAt
+
+  sessions StudySession[]
+  subscription Subscription?
+}
+
+model StudySession {
+  id  String  @id @default(uuid())
+  userId  String
+  topic String
+  transcript  Json
+  feedbackSummary Json?
+  duration  Int?
+  status  Status @default(ACTIVE)
+  createdAt DateTime @default(now())
+
+  user  User  @relation(fields: [userId], references: [id])
+}
+
+model Subscription {
+  id  String  @id @default(uuid())
+  userId  String  @unique
+  tier  Tier  @default(STARTER)
+  status  SubscriptionStatus @default(TRIAL)
+  startDate DateTime  @default(now())
+  renewalDate DateTime?
+
+  user  User  @relation(fields: [userId], references: [id])
+
+}
+
+enum Tier {
+  STARTER
+  PRO
+  SCHOLAR
+  GENIUS
+}
+
+enum Status {
+  ACTIVE
+  COMPLETED
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELLED
+  TRIAL
+}
